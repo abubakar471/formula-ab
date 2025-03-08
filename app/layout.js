@@ -18,7 +18,7 @@ const Baloo_Bhaijaan = Baloo_Bhaijaan_2({
 })
 
 export const metadata = {
-  title: "FormulaX",
+  title: "Formula AB",
   description: "Equation Solver",
 };
 
