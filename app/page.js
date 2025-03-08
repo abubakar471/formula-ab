@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Fraction from "fraction.js";
 import { LoaderCircle } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const [a1, seta1] = useState('');
@@ -21,8 +22,12 @@ export default function Home() {
 
   const convertToFraction = (decimal) => {
     const fraction = new Fraction(decimal);
+
+    if (fraction.n == 0) return "0";
+    if (fraction.d == 1) return fraction.n.toString();
+
     const sign = fraction.s < 0 ? "-" : "";
-    return `${sign}${fraction.n.toString()}/${fraction.d.toString()}`; // Convert BigInt to String
+    return `${sign}${fraction.n.toString()}/${fraction.d.toString()}`;
   };
 
 
@@ -42,7 +47,9 @@ export default function Home() {
       const Determinant = A1 * B2 - A2 * B1;
 
       if (Determinant === 0) {
-        alert("Infinitive Solutions");
+        toast.error("Infinitive Solutions");
+        setIsLoading(false);
+        return;
       }
 
       const DX = C2 * B1 - C1 * B2;
@@ -57,21 +64,21 @@ export default function Home() {
       sety(franctionaziedY);
 
       setTimeout(() => {
-        console.log("setting false")
+        toast.success("Bingo Bro 😎")
         setIsLoading(false);
       }, 2000)
     } catch (err) {
       console.log(err);
 
       setIsLoading(false);
-      alert("My bad bro! Seems something went wrong.")
+      toast.error("My bad bro! Seems something went wrong.")
     }
   }
 
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen">
-        <div className="bg-white rounded-2xl p-8 shadow-md shadow-gray-300 min-h-[500px] min-w-[80%] mx-auto md:min-w-[500px]">
+        <div className="bg-white rounded-2xl p-8 shadow-md shadow-gray-300 min-h-auto min-w-[80%] mx-auto md:min-w-[500px]">
           <h1 className="text-2xl ">Formula AB</h1>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 w-full mt-4">
@@ -130,9 +137,11 @@ export default function Home() {
           </form>
 
           <div className="mt-4">
-            <h3>Result: </h3>
+
+            {(!isLoading && x && y) && (<h3>Result: </h3>)}
+
             {
-              (!isLoading && x && y)&& (
+              (!isLoading && x && y) && (
                 <>
                   <div className="bg-[#ECECEC] text-black font-semibold w-full rounded-md px-4 py-2 text-sm">
                     X = {x}
